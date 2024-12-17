@@ -6,7 +6,6 @@ from typing import Optional
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
-from hdx.utilities.dateparse import parse_date
 from hdx.utilities.retriever import Retrieve
 
 logger = logging.getLogger(__name__)
@@ -34,12 +33,7 @@ class Venezuela3w:
     def generate_dataset(self, year: int) -> Optional[Dataset]:
         dataset = Dataset.read_from_hdx(self._configuration["dataset_name"])
         dataset_time_period = dataset.get_time_period()
-        start_date = dataset_time_period["startdate"]
-        end_date = dataset_time_period["enddate"]
-        data_end_dates = [parse_date(row["report_month"]) for row in self.data]
-        data_end_date = max(data_end_dates)
-        if data_end_date > end_date:
-            dataset.set_time_period(start_date, data_end_date)
+        dataset_start_date = dataset_time_period["startdate"]
 
         resourcedata = {
             "name": f"VEN_5W_{year}.csv",
@@ -55,7 +49,12 @@ class Venezuela3w:
             f"VEN_5W_{year}.csv",
             resourcedata,
             encoding="utf-8-sig",
+            datecol="report_month",
         )
+        end_date = dataset.get_time_period()["enddate"]
+        start_date = dataset.get_time_period()["startdate"]
+        if dataset_start_date < start_date:
+            dataset.set_time_period(dataset_start_date, end_date)
 
         resources = dataset.get_resources()
         from_index = None
