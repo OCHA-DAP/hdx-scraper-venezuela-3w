@@ -85,7 +85,7 @@ mdurl==0.1.2
     # via markdown-it-py
 more-itertools==10.5.0
     # via inflect
-num2words==0.5.13
+num2words==0.5.14
     # via quantulum3
 openpyxl==3.1.5
     # via hdx-python-utilities

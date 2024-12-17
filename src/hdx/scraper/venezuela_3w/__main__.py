@@ -9,12 +9,16 @@ import logging
 from os.path import dirname, expanduser, join
 
 from hdx.api.configuration import Configuration
+from hdx.data.user import User
 from hdx.facades.infer_arguments import facade
+from hdx.utilities.dateparse import now_utc
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import (
     wheretostart_tempdir_batch,
 )
 from hdx.utilities.retriever import Retrieve
+
+from hdx.scraper.venezuela_3w.venezuela_3w import Venezuela3w
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +40,14 @@ def main(
     Returns:
         None
     """
+    configuration = Configuration.read()
+    if not User.check_current_user_organization_access(
+        "ochavenezuela", "create_dataset"
+    ):
+        raise PermissionError(
+            "API Token does not give access to OCHA Venezuela organisation!"
+        )
+
     with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
         temp_dir = info["folder"]
         with Download() as downloader:
@@ -47,18 +59,17 @@ def main(
                 save=save,
                 use_saved=use_saved,
             )
-            configuration = Configuration.read()
-            #
-            # Steps to generate dataset
-            #
-            dataset.update_from_yaml(
-                path=join(
-                    dirname(__file__), "config", "hdx_dataset_static.yaml"
-                )
-            )
-            dataset.create_in_hdx(
-                remove_additional_resources=True,
-                match_resource_order=False,
+            venezuela_3w = Venezuela3w(configuration, retriever)
+
+            today = now_utc()
+            year = today.year
+            venezuela_3w.get_data(year)
+
+            dataset = venezuela_3w.generate_dataset(year)
+            dataset.update_in_hdx(
+                operation="patch",
+                match_resource_order=True,
+                remove_additional_resources=False,
                 hxl_update=False,
                 updated_by_script=_UPDATED_BY_SCRIPT,
                 batch=info["batch"],
