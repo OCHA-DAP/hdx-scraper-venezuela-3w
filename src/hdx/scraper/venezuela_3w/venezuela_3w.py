@@ -20,12 +20,14 @@ class Venezuela3w:
         self.data = []
 
     def get_data(self, year: int) -> None:
-        base_url = self._configuration["base_url"].replace("YYYY", str(year))
+        base_url = self._configuration["base_url"]
+        dataset_number = self._configuration["dataset_number"][year]
+        base_url = f"{base_url}?dataset={dataset_number}&year={year}"
         json = self._retriever.download_json(base_url)
         pages = json["total_pages"]
         self.data = json["data"]
         for page in range(2, pages + 1):
-            json_url = f"{base_url}?page={page}"
+            json_url = f"{base_url}&page={page}"
             json = self._retriever.download_json(json_url)
             self.data.extend(json["data"])
 
