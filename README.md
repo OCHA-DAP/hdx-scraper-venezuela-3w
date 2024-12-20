@@ -1,9 +1,9 @@
-# Collector for venezuela_3w Datasets
+# Collector for Venezuela 3w Datasets
 [![Build Status](https://github.com/OCHA-DAP/hdx-scraper-venezuela-3w/actions/workflows/run-python-tests.yaml/badge.svg)](https://github.com/OCHA-DAP/hdx-scraper-venezuela-3w/actions/workflows/run-python-tests.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-venezuela-3w/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-venezuela-3w?branch=main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-This script ...
+This script downloads data from the [ROLAC API](https://rolac345w.humanitarianresponse.info) and adds a resource to the Venzuela 3W dataset on HDX. It makes around 200 calls to the API and one read/write on HDX. It takes about 5 minutes to run.
 
 ## Development
 
