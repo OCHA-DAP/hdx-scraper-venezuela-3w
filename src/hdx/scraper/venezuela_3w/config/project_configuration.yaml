@@ -5,6 +5,7 @@ base_url: "https://rolac345w.humanitarianresponse.info/es/api/v2/dataset-api"
 
 dataset_number:
   2024: 87
+  2025: 98
 
 hxltags:
   "id": "#meta+id"
