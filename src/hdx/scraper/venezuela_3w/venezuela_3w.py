@@ -2,7 +2,6 @@
 """venezuela_3w scraper"""
 
 import logging
-from typing import Optional
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
@@ -30,7 +29,7 @@ class Venezuela3w:
             json = self._retriever.download_json(json_url)
             self.data.extend(json["data"])
 
-    def generate_dataset(self, year: int) -> Optional[Dataset]:
+    def generate_dataset(self, year: int) -> Dataset:
         dataset = Dataset.read_from_hdx(self._configuration["dataset_name"])
         dataset_time_period = dataset.get_time_period()
         dataset_start_date = dataset_time_period["startdate"]
@@ -68,5 +67,7 @@ class Venezuela3w:
             # to index was calculated while element was in front
             to_index -= 1
         resources.insert(to_index, resource)
+
+        dataset.set_quickchart_resource(resource)
 
         return dataset

@@ -13,9 +13,7 @@ from hdx.data.user import User
 from hdx.facades.infer_arguments import facade
 from hdx.utilities.dateparse import now_utc
 from hdx.utilities.downloader import Download
-from hdx.utilities.path import (
-    wheretostart_tempdir_batch,
-)
+from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
 
 from hdx.scraper.venezuela_3w.venezuela_3w import Venezuela3w
@@ -48,14 +46,13 @@ def main(
             "API Token does not give access to OCHA Venezuela organisation!"
         )
 
-    with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
-        temp_dir = info["folder"]
+    with temp_dir(folder=_USER_AGENT_LOOKUP) as temp_folder:
         with Download() as downloader:
             retriever = Retrieve(
                 downloader=downloader,
-                fallback_dir=temp_dir,
+                fallback_dir=temp_folder,
                 saved_dir=_SAVED_DATA_DIR,
-                temp_dir=temp_dir,
+                temp_dir=temp_folder,
                 save=save,
                 use_saved=use_saved,
             )
@@ -66,13 +63,20 @@ def main(
             venezuela_3w.get_data(year)
 
             dataset = venezuela_3w.generate_dataset(year)
+            dataset.generate_quickcharts(
+                0,
+                join(
+                    dirname(__file__),
+                    "config",
+                    "hdx_resource_view_static.yaml",
+                ),
+            )
             dataset.update_in_hdx(
                 operation="patch",
                 match_resource_order=True,
                 remove_additional_resources=False,
                 hxl_update=False,
                 updated_by_script=_UPDATED_BY_SCRIPT,
-                batch=info["batch"],
             )
 
 
