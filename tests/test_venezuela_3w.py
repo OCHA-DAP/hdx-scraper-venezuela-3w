@@ -1,28 +1,16 @@
-import filecmp
 from os.path import join
 
 import pytest
-from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.utilities.compare import assert_files_same
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
-from hdx.utilities.useragent import UserAgent
 
 from hdx.scraper.venezuela_3w.venezuela_3w import Venezuela3w
 
 
 class TestVenezuela3w:
-    @pytest.fixture(scope="function")
-    def configuration(self, config_dir):
-        UserAgent.set_global("test")
-        Configuration._create(
-            hdx_read_only=True,
-            hdx_site="prod",
-            project_config_yaml=join(config_dir, "project_configuration.yaml"),
-        )
-        return Configuration.read()
-
     @pytest.fixture(scope="function")
     def read_dataset(self, monkeypatch):
         def read_from_hdx(dataset_name):
@@ -35,21 +23,7 @@ class TestVenezuela3w:
                 )
             )
 
-        monkeypatch.setattr(
-            Dataset, "read_from_hdx", staticmethod(read_from_hdx)
-        )
-
-    @pytest.fixture(scope="class")
-    def fixtures_dir(self):
-        return join("tests", "fixtures")
-
-    @pytest.fixture(scope="class")
-    def input_dir(self, fixtures_dir):
-        return join(fixtures_dir, "input")
-
-    @pytest.fixture(scope="class")
-    def config_dir(self, fixtures_dir):
-        return join("src", "hdx", "scraper", "venezuela_3w", "config")
+        monkeypatch.setattr(Dataset, "read_from_hdx", staticmethod(read_from_hdx))
 
     def test_venezuela_3w(
         self, configuration, read_dataset, fixtures_dir, input_dir, config_dir
@@ -87,9 +61,10 @@ class TestVenezuela3w:
                     "format": "csv",
                     "resource_type": "file.upload",
                     "url_type": "upload",
+                    "dataset_preview_enabled": "True",
                 }
 
-                assert filecmp.cmp(
+                assert_files_same(
                     join(tempdir, "VEN_5W_2024.csv"),
                     join(fixtures_dir, "VEN_5W_2024.csv"),
                 )
