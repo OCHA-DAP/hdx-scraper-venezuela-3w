@@ -1,7 +1,5 @@
 from os.path import join
 
-import pytest
-from hdx.data.dataset import Dataset
 from hdx.utilities.compare import assert_files_same
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
@@ -11,20 +9,6 @@ from hdx.scraper.venezuela_3w.venezuela_3w import Venezuela3w
 
 
 class TestVenezuela3w:
-    @pytest.fixture(scope="function")
-    def read_dataset(self, monkeypatch):
-        def read_from_hdx(dataset_name):
-            return Dataset.load_from_json(
-                join(
-                    "tests",
-                    "fixtures",
-                    "input",
-                    f"dataset-{dataset_name}.json",
-                )
-            )
-
-        monkeypatch.setattr(Dataset, "read_from_hdx", staticmethod(read_from_hdx))
-
     def test_venezuela_3w(
         self, configuration, read_dataset, fixtures_dir, input_dir, config_dir
     ):
@@ -58,6 +42,7 @@ class TestVenezuela3w:
                 assert resources[0] == {
                     "name": "VEN_5W_2024.csv",
                     "description": "5W data from Venezuela (2024)",
+                    "p_coded": True,
                     "format": "csv",
                     "resource_type": "file.upload",
                     "url_type": "upload",

@@ -37,6 +37,7 @@ class Venezuela3w:
         resourcedata = {
             "name": f"VEN_5W_{year}.csv",
             "description": f"5W data from Venezuela ({year})",
+            "p_coded": True,
         }
         hxltags = self._configuration["hxltags"]
         headers = list(hxltags.keys())
