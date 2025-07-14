@@ -62,7 +62,7 @@ def main(
             year = today.year
             venezuela_3w.get_data(year)
 
-            dataset = venezuela_3w.generate_dataset(year)
+            dataset = venezuela_3w.generate_dataset(year, today)
             dataset.generate_quickcharts(
                 0,
                 join(
