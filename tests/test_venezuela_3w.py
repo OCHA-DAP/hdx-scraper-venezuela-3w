@@ -1,6 +1,7 @@
 from os.path import join
 
 from hdx.utilities.compare import assert_files_same
+from hdx.utilities.dateparse import parse_date
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
@@ -30,7 +31,10 @@ class TestVenezuela3w:
                 venezuela_3w.get_data(2024)
                 assert len(venezuela_3w.data) == 3000
 
-                dataset = venezuela_3w.generate_dataset(2024)
+                dataset = venezuela_3w.generate_dataset(
+                    2024,
+                    parse_date("2024-07-01"),
+                )
                 assert (
                     dataset.get_time_period()["enddate_str"]
                     == "2024-07-01T23:59:59+00:00"

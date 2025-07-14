@@ -2,6 +2,7 @@
 """venezuela_3w scraper"""
 
 import logging
+from datetime import datetime
 
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
@@ -29,7 +30,7 @@ class Venezuela3w:
             json = self._retriever.download_json(json_url)
             self.data.extend(json["data"])
 
-    def generate_dataset(self, year: int) -> Dataset:
+    def generate_dataset(self, year: int, today: datetime) -> Dataset:
         dataset = Dataset.read_from_hdx(self._configuration["dataset_name"])
         dataset_time_period = dataset.get_time_period()
         dataset_start_date = dataset_time_period["startdate"]
@@ -53,8 +54,9 @@ class Venezuela3w:
         )
         end_date = dataset.get_time_period()["enddate"]
         start_date = dataset.get_time_period()["startdate"]
-        if dataset_start_date < start_date:
-            dataset.set_time_period(dataset_start_date, end_date)
+        overall_start = min(start_date, dataset_start_date)
+        overall_end = min(end_date, today)
+        dataset.set_time_period(overall_start, overall_end)
 
         resources = dataset.get_resources()
         from_index = None
