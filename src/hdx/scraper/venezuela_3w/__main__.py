@@ -39,12 +39,7 @@ def main(
         None
     """
     configuration = Configuration.read()
-    if not User.check_current_user_organization_access(
-        "ochavenezuela", "create_dataset"
-    ):
-        raise PermissionError(
-            "API Token does not give access to OCHA Venezuela organisation!"
-        )
+    User.check_current_user_write_access("ochavenezuela")
 
     with temp_dir(folder=_USER_AGENT_LOOKUP) as temp_folder:
         with Download() as downloader:
