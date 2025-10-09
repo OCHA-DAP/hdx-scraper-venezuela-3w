@@ -48,8 +48,6 @@ class TestVenezuela3w:
                     "description": "5W data from Venezuela (2024)",
                     "p_coded": True,
                     "format": "csv",
-                    "resource_type": "file.upload",
-                    "url_type": "upload",
                     "dataset_preview_enabled": "True",
                 }
 
