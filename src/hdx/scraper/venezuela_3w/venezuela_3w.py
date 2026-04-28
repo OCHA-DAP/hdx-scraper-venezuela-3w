@@ -42,13 +42,12 @@ class Venezuela3w:
         }
         hxltags = self._configuration["hxltags"]
         headers = list(hxltags.keys())
-        dataset.generate_resource_from_iterable(
-            headers,
-            self.data,
-            hxltags,
+        dataset.generate_resource(
             self._temp_dir,
             f"VEN_5W_{year}.csv",
+            self.data,
             resourcedata,
+            headers,
             encoding="utf-8-sig",
             datecol="report_month",
         )
@@ -70,7 +69,5 @@ class Venezuela3w:
             # to index was calculated while element was in front
             to_index -= 1
         resources.insert(to_index, resource)
-
-        dataset.set_quickchart_resource(resource)
 
         return dataset
