@@ -1,3 +1,4 @@
+# DEPRECATED - Pipeline discontinued
 # Collector for Venezuela 3w Datasets
 [![Build Status](https://github.com/OCHA-DAP/hdx-scraper-venezuela-3w/actions/workflows/run-python-tests.yaml/badge.svg)](https://github.com/OCHA-DAP/hdx-scraper-venezuela-3w/actions/workflows/run-python-tests.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-venezuela-3w/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-venezuela-3w?branch=main)
